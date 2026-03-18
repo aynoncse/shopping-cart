@@ -1,11 +1,13 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { auth, googleProvider } from '../lib/firebase';
 import { signInWithPopup, signOut } from 'firebase/auth';
+import { setUser, logout } from '../store/authSlice';
 
 export default function LoginButton() {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const dispatch = useDispatch();
+  const {user, token} = useSelector((state) => state.auth);
 
   const handleSignIn = async () => {
     try {
@@ -15,64 +17,55 @@ export default function LoginButton() {
       // Get the Firebase ID token
       const idToken = await user.getIdToken();
 
-      setUser({
-        uid: user.uid,
-        email: user.email,
-        name: user.displayName,
-      });
-      setToken(idToken);
-
-      console.log('Token:', idToken); // You'll see this in the console
+      dispatch(
+        setUser({
+          user: {
+            uid: user.uid,
+            email: user.email,
+            name: user.displayName,
+          },
+          token: idToken,
+        }),
+      );
     } catch (error) {
       console.error('Sign in error:', error);
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      // Example fetch to your Laravel backend
-      fetch('http://localhost:8000/api/v1/user', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => console.log('User from backend:', data))
-        .catch((err) => console.error('API error:', err));
-    }
-  }, [token]);
+  const handleSignOut = async () => {
+    await signOut(auth);
+    dispatch(logout());
+  };
 
-  // Inside the component:
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const idToken = await user.getIdToken();
-        setUser({
-          uid: user.uid,
-          email: user.email,
-          name: user.displayName,
-        });
-        setToken(idToken);
+
+        dispatch(
+          setUser({
+            user: {
+              uid: user.uid,
+              email: user.email,
+              name: user.displayName,
+            },
+            token: idToken,
+          }),
+        );
       } else {
-        setUser(null);
-        setToken(null);
+        dispatch(logout());
       }
     });
     return unsubscribe;
-  }, []);
-
-  const handleSignOut = async () => {
-    await signOut(auth);
-    setUser(null);
-    setToken(null);
-  };
+  }, [dispatch]);
 
   if (user) {
     return (
       <div>
-        <p className='mb-1'>Welcome, {user.name}</p>
-        <button onClick={handleSignOut} className='border rounded-md px-3 py-1'>Sign Out</button>
+        <p className="mb-1">Welcome, {user.name}</p>
+        <button onClick={handleSignOut} className="border rounded-md px-3 py-1">
+          Sign Out
+        </button>
       </div>
     );
   }
