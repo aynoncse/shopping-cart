@@ -17,25 +17,25 @@ class ProductSeeder extends Seeder
                 'name' => 'Protein Pancakes',
                 'description' => 'High-protein pancakes for a healthy breakfast.',
                 'price' => 9.99,
-                'image' => 'products/protein-pancakes.jpg',
+                'image' => 'https://placehold.co/300',
             ],
             [
                 'name' => 'Aloe Vera Gel',
                 'description' => 'Natural aloe vera gel for skin care.',
                 'price' => 5.49,
-                'image' => 'products/aloe-vera-gel.jpg',
+                'image' => 'https://placehold.co/300',
             ],
             [
                 'name' => 'Whey Protein Powder',
                 'description' => 'Premium whey protein for muscle recovery.',
                 'price' => 29.99,
-                'image' => 'products/whey-protein.jpg',
+                'image' => 'https://placehold.co/300',
             ],
             [
                 'name' => 'Yoga Mat',
                 'description' => 'Comfortable non-slip yoga mat.',
                 'price' => 15.00,
-                'image' => 'products/yoga-mat.jpg',
+                'image' => 'https://placehold.co/300',
             ],
         ];
 
