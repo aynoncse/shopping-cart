@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,5 +17,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/users', function (Request $request) {
             return User::all();
         });
+
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
+
+        Route::get('/cart', [CartController::class, 'index']);
+        Route::post('/cart/sync', [CartController::class, 'sync']);
     });
 });
