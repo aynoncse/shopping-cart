@@ -5,18 +5,42 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
     prepareHeaders: (headers, { getState }) => {
-        const token = getState().auth.token;
-        if (token) {
-            headers.set('Authorization', `Bearer ${token}`);
-        }
-        return headers;
-    }
+      const token = getState().auth.token;
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
+  tagTypes: ['Cart', 'Products'],
   endpoints: (builder) => ({
     getUser: builder.query({
-      query: () => '/v1/users',
-    })
+      query: () => '/v1/user',
+    }),
+
+    getProducts: builder.query({
+      query: () => '/v1/products',
+      providesTags: ['Products'],
+    }),
+
+    getCart: builder.query({
+      query: () => '/v1/cart',
+      providesTags: ['Cart'],
+    }),
+
+    syncCart: builder.mutation({
+      query: (cartItems) => ({
+        url: '/v1/cart/sync',
+        method: 'POST',
+        body: {
+          items: cartItems.map(({ product_id, quantity }) => ({
+            product_id,
+            quantity,
+          })),
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetUserQuery } = api;
+export const { useGetUserQuery, useGetProductsQuery, useGetCartQuery, useSyncCartMutation } = api;

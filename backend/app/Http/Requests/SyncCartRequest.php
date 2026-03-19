@@ -23,7 +23,7 @@ class SyncCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'items' => 'required|array',
+            'items' => 'array',
             'items.*.product_id' => 'required|integer|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
         ];

@@ -14,10 +14,6 @@ Route::prefix('v1')->group(function () {
 
     // Protected routes
     Route::middleware('firebase.auth')->group(function () {
-        Route::get('/users', function (Request $request) {
-            return User::all();
-        });
-
         Route::get('/user', function (Request $request) {
             return $request->user();
         });
