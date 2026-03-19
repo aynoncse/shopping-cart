@@ -59,20 +59,24 @@ export default function LoginButton() {
     return unsubscribe;
   }, [dispatch]);
 
-  if (user) {
-    return (
-      <div>
-        <p className="mb-1">Welcome, {user.name}</p>
-        <button onClick={handleSignOut} className="border rounded-md px-3 py-1">
-          Sign Out
-        </button>
-      </div>
-    );
-  }
-
+if (user) {
   return (
-    <button onClick={handleSignIn} className="border rounded-md px-3 py-1">
-      Sign in with Google
-    </button>
+    <div className="flex items-center space-x-4">
+      <span className="text-gray-700">Welcome, {user.name}</span>
+      <button
+        onClick={handleSignOut}
+        className="border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-100 transition">
+        Sign Out
+      </button>
+    </div>
   );
+}
+
+ return (
+   <button
+     onClick={handleSignIn}
+     className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition">
+     Sign in with Google
+   </button>
+ );
 }
