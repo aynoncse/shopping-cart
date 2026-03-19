@@ -2,12 +2,21 @@
 
 import Image from 'next/image';
 import { useGetProductsQuery } from '../store/api';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../store/cartSlice';
 
 export default function ProductList() {
   const { data: products, error, isLoading } = useGetProductsQuery();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  const handleAddToCart = (product) => {
+    if (!user) {
+      alert('Please log in to add items to your cart.');
+      return;
+    };
+    dispatch(addItem({ product, quantity: 1 }));
+  };
 
   if (isLoading) {
     return (
@@ -24,19 +33,15 @@ export default function ProductList() {
       </div>
     );
   }
-   if (error) {
-     return (
-       <div className="text-center py-8">
-         <p className="text-red-500">
-           Failed to load products. Please try again.
-         </p>
-       </div>
-     );
-   }
-
-  const handleAddToCart = (product) => {
-    dispatch(addItem({ product, quantity: 1 }));
-  };
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-500">
+          Failed to load products. Please try again.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

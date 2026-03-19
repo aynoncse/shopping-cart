@@ -62,10 +62,10 @@ export default function LoginButton() {
 if (user) {
   return (
     <div className="flex items-center space-x-4">
-      <span className="text-gray-700">Welcome, {user.name}</span>
+      <span className="text-gray-400">Welcome, {user.name}</span>
       <button
         onClick={handleSignOut}
-        className="border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-100 transition">
+        className="border border-gray-300 rounded-md px-4 py-2 hover:bg-red-500 hover:text-white transition">
         Sign Out
       </button>
     </div>

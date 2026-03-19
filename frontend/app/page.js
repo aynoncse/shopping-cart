@@ -1,12 +1,13 @@
 'use client';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import LoginButton from '@/components/LoginButton';
 import ProductList from '@/components/ProductList';
 import Cart from '@/components/Cart';
 import { useGetCartQuery } from '@/store/api';
 import { setCart } from '@/store/cartSlice';
 import useCartSync from '@/hooks/useCartSync';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   const { user } = useSelector((state) => state.auth);
@@ -27,26 +28,21 @@ export default function Home() {
   useCartSync();
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Shopping Cart System</h1>
-      <LoginButton />
+    <>
       {user ? (
         <div className="flex flex-col md:flex-row gap-8 mt-8">
           <div className="flex-1">
             <ProductList />
-
-
-
           </div>
           <div className="md:w-1/3">
             <Cart />
           </div>
         </div>
       ) : (
-        <p className="mt-8 text-gray-600">
-          Please sign in to browse products and start shopping.
-        </p>
+        <div className="flex flex-col md:flex-row gap-8 mt-8">
+            <ProductList />
+        </div>
       )}
-    </div>
+    </>
   );
 }
