@@ -20,8 +20,8 @@ export default function ProductList() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...Array(6)].map((_, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[...Array(8)].map((_, i) => (
           <div key={i} className="border rounded-lg shadow p-4 animate-pulse">
             <div className="w-full h-48 bg-gray-300 rounded mb-4"></div>
             <div className="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
@@ -44,7 +44,7 @@ export default function ProductList() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {products?.map((product) => (
         <div
           key={product.id}

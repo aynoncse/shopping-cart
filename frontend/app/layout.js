@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar';
 import './globals.css';
 import { Providers } from './providers';
 import Footer from '@/components/Footer';
+import CartDrawer from '@/components/CartDrawer';
 
 export const metadata = {
   title: 'Shopping Cart',
@@ -9,13 +10,15 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
   return (
     <html lang="en">
       <body>
         <div className="min-h-screen flex flex-col">
           <Providers>
-            <Navbar />
+            <Navbar/>
             <main className="container mx-auto px-4 grow">{children}</main>
+            <CartDrawer/>
           </Providers>
           <Footer />
         </div>
