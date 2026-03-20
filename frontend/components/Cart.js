@@ -38,13 +38,19 @@ export default function Cart() {
           key={item.product_id}
           className="flex items-start space-x-3 border-b border-gray-100 pb-4 last:border-0">
           <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden shrink-0">
-            <Image
-              src={item.product?.image}
-              alt={item.product?.name}
-              width={64}
-              height={64}
-              className="w-full h-full object-cover"
-            />
+            {item.product?.image ? (
+              <Image
+                src={item.product.image}
+                alt={item.product?.name || 'Cart item'}
+                width={64}
+                height={64}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-gray-200 text-[10px] font-medium uppercase tracking-wide text-gray-500">
+                No image
+              </div>
+            )}
           </div>
 
           <div className="flex-1 min-w-0">

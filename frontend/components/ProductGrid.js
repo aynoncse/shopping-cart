@@ -1,4 +1,5 @@
-import ProductList from "./ProductList";
+import ProductList from './ProductList';
+import ProductListError from './ProductListError';
 
 async function fetchProducts(page = 1, perPage = 12) {
   const baseUrl =
@@ -11,9 +12,21 @@ async function fetchProducts(page = 1, perPage = 12) {
 }
 
 export default async function ProductGrid() {
-  const initialData = await fetchProducts(1, 12);
+  let initialData;
+
+  try {
+    initialData = await fetchProducts(1, 12);
+  } catch {
+    return (
+      <ProductListError message="Failed to load products right now. Please try again shortly." />
+    );
+  }
+
+  const productIds = (initialData.data || []).map((product) => product.id).join('-');
+
   return (
     <ProductList
+      key={`${initialData.current_page}-${initialData.last_page}-${productIds}`}
       initialProducts={initialData.data}
       initialMeta={initialData}
     />

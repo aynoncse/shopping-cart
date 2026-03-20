@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetCartQuery } from '@/store/api';
-import { setCart } from '@/store/cartSlice';
+import { resetCart, setCart } from '@/store/cartSlice';
 import useCartSync from '@/hooks/useCartSync';
 
 export default function CartInitializer({ children }) {
@@ -14,10 +14,15 @@ export default function CartInitializer({ children }) {
   useCartSync();
 
   useEffect(() => {
+    if (!user) {
+      dispatch(resetCart());
+      return;
+    }
+
     if (isSuccess && initialCart) {
       dispatch(setCart(initialCart));
     }
-  }, [isSuccess, initialCart, dispatch]);
+  }, [user, isSuccess, initialCart, dispatch]);
 
   return children;
 }

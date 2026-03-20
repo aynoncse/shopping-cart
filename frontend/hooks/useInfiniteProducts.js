@@ -1,6 +1,16 @@
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { useLazyGetProductsQuery } from '../store/api';
 
+const dedupeProducts = (products) => {
+  const ids = new Set();
+
+  return products.filter((item) => {
+    if (ids.has(item.id)) return false;
+    ids.add(item.id);
+    return true;
+  });
+};
+
 export const useInfiniteProducts = ({
   initialProducts = [],
   initialMeta = null,
@@ -13,43 +23,38 @@ export const useInfiniteProducts = ({
   );
   const loaderRef = useRef(null);
 
-  const [trigger, { data, isFetching, error }] = useLazyGetProductsQuery();
+  const [trigger, { isFetching, error }] = useLazyGetProductsQuery();
 
-  useEffect(() => {
-    if (page === 1 && initialMeta) return;
-    if (page > 1) {
-      trigger({ page, per_page: perPage });
+  const loadNextPage = useCallback(async () => {
+    if (isFetching || !hasMore) {
+      return;
     }
-  }, [page, perPage, trigger, initialMeta]);
 
- useEffect(() => {
-   if (!data) return;
-   // eslint-disable-next-line react-hooks/set-state-in-effect
-   setAllProducts((prev) => {
-     const merged = [...prev, ...(data.data || [])];
-     const ids = new Set();
-     return merged.filter((item) => {
-       if (ids.has(item.id)) return false;
-       ids.add(item.id);
-       return true;
-     });
-   });
-   setHasMore(data.current_page < data.last_page);
- }, [data]);
+    const nextPage = page + 1;
+    setPage(nextPage);
+
+    try {
+      const nextData = await trigger({ page: nextPage, per_page: perPage }).unwrap();
+      setAllProducts((prev) => dedupeProducts([...prev, ...(nextData.data || [])]));
+      setHasMore(nextData.current_page < nextData.last_page);
+    } catch {
+      setPage((prev) => prev - 1);
+    }
+  }, [hasMore, isFetching, page, perPage, trigger]);
 
   useEffect(() => {
     if (!loaderRef.current || !hasMore) return;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isFetching && hasMore) {
-          setPage((prev) => prev + 1);
+        if (entries[0].isIntersecting) {
+          loadNextPage();
         }
       },
       { threshold: 0.1 },
     );
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [isFetching, hasMore]);
+  }, [hasMore, loadNextPage]);
 
   const reset = useCallback(() => {
     setPage(initialMeta?.current_page || 1);
