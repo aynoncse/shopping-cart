@@ -15,7 +15,10 @@ class FirebaseAuth
         $token = $request->bearerToken();
 
         if (!$token) {
-            return response()->json(['error' => 'Unauthorized - No token provided'], 401);
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized - No token provided',
+            ], 401);
         }
 
         try {
