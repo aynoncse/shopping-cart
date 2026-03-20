@@ -1,12 +1,15 @@
 import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSyncCartMutation } from '@/store/api';
+import { markSyncFailed, markSyncStarted, markSyncSuccess } from '@/store/cartSlice';
 
 export default function useCartSync() {
   const cartItems = useSelector((state) => state.cart.items);
   const isHydrated = useSelector((state) => state.cart.isHydrated);
+  const syncStatus = useSelector((state) => state.cart.syncStatus);
   const token = useSelector((state) => state.auth.token);
   const [syncCart] = useSyncCartMutation();
+  const dispatch = useDispatch();
   const timeoutRef = useRef(null);
   const skipNextSyncRef = useRef(false);
 
@@ -24,6 +27,10 @@ export default function useCartSync() {
       return;
     }
 
+    if (syncStatus !== 'dirty') {
+      return;
+    }
+
     if (skipNextSyncRef.current) {
       skipNextSyncRef.current = false;
       return;
@@ -35,8 +42,11 @@ export default function useCartSync() {
 
     timeoutRef.current = setTimeout(async () => {
       try {
-        await syncCart(cartItems).unwrap();
+        dispatch(markSyncStarted());
+        const syncedItems = await syncCart(cartItems).unwrap();
+        dispatch(markSyncSuccess(syncedItems));
       } catch (error) {
+        dispatch(markSyncFailed(error?.data?.message || 'Cart sync failed.'));
         console.error('Cart sync failed:', error);
       }
     }, 500);
@@ -47,5 +57,5 @@ export default function useCartSync() {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [cartItems, isHydrated, token, syncCart]);
+  }, [cartItems, dispatch, isHydrated, syncCart, syncStatus, token]);
 }

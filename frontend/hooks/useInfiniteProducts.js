@@ -36,7 +36,7 @@ export const useInfiniteProducts = ({
     try {
       const nextData = await trigger({ page: nextPage, per_page: perPage }).unwrap();
       setAllProducts((prev) => dedupeProducts([...prev, ...(nextData.data || [])]));
-      setHasMore(nextData.current_page < nextData.last_page);
+      setHasMore((nextData.meta?.current_page || 1) < (nextData.meta?.last_page || 1));
     } catch {
       setPage((prev) => prev - 1);
     }

@@ -14,17 +14,18 @@ export const api = createApi({
   }),
   tagTypes: ['Cart', 'Products'],
   endpoints: (builder) => ({
-    getUser: builder.query({
-      query: () => '/v1/user',
-    }),
-
     getProducts: builder.query({
       query: ({ page = 1, per_page = 12 } = {}) => `/v1/products?page=${page}&per_page=${per_page}`,
+      transformResponse: (response) => ({
+        data: response.data,
+        meta: response.meta,
+      }),
       providesTags: ['Products'],
     }),
 
     getCart: builder.query({
       query: () => '/v1/cart',
+      transformResponse: (response) => response.data,
       providesTags: ['Cart'],
     }),
 
@@ -39,12 +40,12 @@ export const api = createApi({
           })),
         },
       }),
+      transformResponse: (response) => response.data,
     }),
   }),
 });
 
 export const {
-  useGetUserQuery,
   useGetProductsQuery,
   useLazyGetProductsQuery,
   useGetCartQuery,

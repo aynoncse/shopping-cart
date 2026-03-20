@@ -8,7 +8,12 @@ async function fetchProducts(page = 1, perPage = 12) {
     `${baseUrl}/v1/products?page=${page}&per_page=${perPage}`,
   );
   if (!response.ok) throw new Error('Failed to fetch products');
-  return response.json();
+  const payload = await response.json();
+
+  return {
+    data: payload.data || [],
+    meta: payload.meta || null,
+  };
 }
 
 export default async function ProductGrid() {
@@ -26,9 +31,9 @@ export default async function ProductGrid() {
 
   return (
     <ProductList
-      key={`${initialData.current_page}-${initialData.last_page}-${productIds}`}
+      key={`${initialData.meta?.current_page}-${initialData.meta?.last_page}-${productIds}`}
       initialProducts={initialData.data}
-      initialMeta={initialData}
+      initialMeta={initialData.meta}
     />
   );
 }
