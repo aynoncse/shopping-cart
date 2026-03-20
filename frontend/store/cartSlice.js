@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   items: [],
+  isHydrated: false,
 };
 
 const cartSlice = createSlice({
@@ -10,10 +11,16 @@ const cartSlice = createSlice({
   reducers: {
     setCart: (state, action) => {
       state.items = action.payload;
+      state.isHydrated = true;
     },
 
     resetCart: (state) => {
       state.items = [];
+      state.isHydrated = false;
+    },
+
+    setHydrated: (state, action) => {
+      state.isHydrated = action.payload;
     },
 
     addItem: (state, action) => {
@@ -39,6 +46,22 @@ const cartSlice = createSlice({
       }
     },
 
+    setQuantity: (state, action) => {
+      const { productId, quantity } = action.payload;
+      const item = state.items.find((item) => item.product_id === productId);
+
+      if (!item) {
+        return;
+      }
+
+      if (quantity <= 0) {
+        state.items = state.items.filter((cartItem) => cartItem.product_id !== productId);
+        return;
+      }
+
+      item.quantity = quantity;
+    },
+
     decrement: (state, action) => {
       const productId = action.payload;
       const item = state.items.find((item) => item.product_id === productId);
@@ -58,5 +81,5 @@ const cartSlice = createSlice({
   },
 });
 
-export const { setCart, resetCart, addItem, increment, decrement, removeItem } = cartSlice.actions;
+export const { setCart, resetCart, setHydrated, addItem, increment, setQuantity, decrement, removeItem } = cartSlice.actions;
 export default cartSlice.reducer;

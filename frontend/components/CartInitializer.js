@@ -2,13 +2,13 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetCartQuery } from '@/store/api';
-import { resetCart, setCart } from '@/store/cartSlice';
+import { resetCart, setCart, setHydrated } from '@/store/cartSlice';
 import useCartSync from '@/hooks/useCartSync';
 
 export default function CartInitializer({ children }) {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const { data: initialCart, isSuccess } = useGetCartQuery(undefined, {
+  const { data: initialCart, isSuccess, isError, isFetching } = useGetCartQuery(undefined, {
     skip: !user,
   });
   useCartSync();
@@ -19,10 +19,20 @@ export default function CartInitializer({ children }) {
       return;
     }
 
+    if (isFetching) {
+      dispatch(setHydrated(false));
+      return;
+    }
+
     if (isSuccess && initialCart) {
       dispatch(setCart(initialCart));
+      return;
     }
-  }, [user, isSuccess, initialCart, dispatch]);
+
+    if (isError) {
+      dispatch(setHydrated(true));
+    }
+  }, [user, isSuccess, isError, isFetching, initialCart, dispatch]);
 
   return children;
 }

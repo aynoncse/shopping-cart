@@ -1,11 +1,21 @@
 'use client';
 import { useSelector, useDispatch } from 'react-redux';
-import { increment, decrement, removeItem } from '../store/cartSlice';
+import { increment, decrement, removeItem, setQuantity } from '../store/cartSlice';
 import Image from 'next/image';
 
 export default function Cart() {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
+
+  const handleQuantityChange = (productId, value) => {
+    const quantity = Number.parseInt(value, 10);
+
+    if (Number.isNaN(quantity)) {
+      return;
+    }
+
+    dispatch(setQuantity({ productId, quantity }));
+  };
 
   if (cartItems.length === 0) {
     return (
@@ -67,9 +77,17 @@ export default function Cart() {
                 aria-label="Decrease quantity">
                 -
               </button>
-              <span className="text-sm font-medium w-6 text-center">
-                {item.quantity}
-              </span>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                value={item.quantity}
+                onChange={(event) =>
+                  handleQuantityChange(item.product_id, event.target.value)
+                }
+                className="h-8 w-16 rounded border border-gray-300 px-2 text-center text-sm font-medium text-gray-800"
+                aria-label={`Quantity for ${item.product?.name || 'cart item'}`}
+              />
               <button
                 onClick={() => dispatch(increment(item.product_id))}
                 className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 transition"
