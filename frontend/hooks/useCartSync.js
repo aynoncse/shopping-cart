@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useSyncCartMutation } from '@/store/api';
 
 export default function useCartSync() {
   const cartItems = useSelector((state) => state.cart.items);
   const token = useSelector((state) => state.auth.token);
   const [syncCart] = useSyncCartMutation();
-  const dispatch = useDispatch();
   const timeoutRef = useRef(null);
 
   useEffect(() => {
@@ -19,7 +18,7 @@ export default function useCartSync() {
     }
 
     // Set new timeout
-    timeoutRef.current = setTimeout(async() => {
+    timeoutRef.current = setTimeout(async () => {
       try {
         await syncCart(cartItems).unwrap();
       } catch (error) {
@@ -32,6 +31,6 @@ export default function useCartSync() {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-    }
-  }, [cartItems, token, syncCart, dispatch]);
+    };
+  }, [cartItems, token, syncCart]);
 }
