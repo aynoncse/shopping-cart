@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductList from '@/components/ProductList';
-import Cart from '@/components/Cart';
 import { useGetCartQuery } from '@/store/api';
 import { setCart } from '@/store/cartSlice';
 import useCartSync from '@/hooks/useCartSync';
