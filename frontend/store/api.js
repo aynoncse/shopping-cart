@@ -19,7 +19,7 @@ export const api = createApi({
     }),
 
     getProducts: builder.query({
-      query: () => '/v1/products',
+      query: ({ page = 1, per_page = 12 } = {}) => `/v1/products?page=${page}&per_page=${per_page}`,
       providesTags: ['Products'],
     }),
 
@@ -43,4 +43,10 @@ export const api = createApi({
   }),
 });
 
-export const { useGetUserQuery, useGetProductsQuery, useGetCartQuery, useSyncCartMutation } = api;
+export const {
+  useGetUserQuery,
+  useGetProductsQuery,
+  useLazyGetProductsQuery,
+  useGetCartQuery,
+  useSyncCartMutation,
+} = api;

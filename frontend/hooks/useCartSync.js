@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCart } from '../store/cartSlice';
 import { useSyncCartMutation } from '@/store/api';
 
 export default function useCartSync() {

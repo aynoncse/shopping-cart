@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   images: {
-    remotePatterns: [
+    
+  },
+  async rewrites() {
+    return [
       {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
+        source: '/storage/:path*',
+        destination: 'http://localhost:8000/storage/:path*',
       },
-    ],
+    ];
   },
 };
 

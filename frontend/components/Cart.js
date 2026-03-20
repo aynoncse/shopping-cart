@@ -37,14 +37,13 @@ export default function Cart() {
         <div
           key={item.product_id}
           className="flex items-start space-x-3 border-b border-gray-100 pb-4 last:border-0">
-          <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+          <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden shrink-0">
             <Image
-              src={item.product?.image || 'https://via.placeholder.com/64'}
+              src={item.product?.image}
               alt={item.product?.name}
-              className="w-full h-full object-cover"
               width={64}
               height={64}
-              unoptimized
+              className="w-full h-full object-cover"
             />
           </div>
 
