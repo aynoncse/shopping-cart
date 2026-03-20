@@ -1,5 +1,4 @@
 'use client';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../store/cartSlice';
 import { useInfiniteProducts } from '@/hooks/useInfiniteProducts';
@@ -8,8 +7,15 @@ import ProductGridSkeleton from './ProductGridSkeleton';
 import ProductListError from './ProductListError';
 import ProductListLoadMore from './ProductListLoadMore';
 
-export default function ProductList() {
-  const { products, isLoading, isLoadingMore, error, hasMore, loaderRef } = useInfiniteProducts();
+export default function ProductList({
+  initialProducts,
+  initialMeta,
+}) {
+  const { products, isLoadingMore, error, hasMore, loaderRef } =
+    useInfiniteProducts({
+      initialProducts,
+      initialMeta,
+    });
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
@@ -21,18 +27,12 @@ export default function ProductList() {
     dispatch(addItem({ product, quantity: 1 }));
   };
 
-  if (isLoading) {
-    return <ProductGridSkeleton />;
-  }
-
-  if (error) {
-    return <ProductListError />;
-  }
+  if (error) return <ProductListError />;
 
   return (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {products?.map((product, index) => (
+        {products.map((product, index) => (
           <ProductCard
             key={`${product.id}-${index}`}
             product={product}
