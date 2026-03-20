@@ -3,6 +3,7 @@ import './globals.css';
 import { Providers } from './providers';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
+import ToasterProvider from '@/components/ToasterProvider';
 
 export const metadata = {
   title: 'Shopping Cart',
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
             <Navbar/>
             <main className="container mx-auto px-4 grow">{children}</main>
             <CartDrawer/>
+            <ToasterProvider/>
           </Providers>
           <Footer />
         </div>
