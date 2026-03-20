@@ -11,18 +11,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-
   return (
     <html lang="en">
       <body>
         <div className="min-h-screen flex flex-col">
           <Providers>
-            <Navbar/>
+            <Navbar />
             <main className="container mx-auto px-4 grow">{children}</main>
-            <CartDrawer/>
-            <ToasterProvider/>
+            <Footer />
+            <CartDrawer />
+            <ToasterProvider />
           </Providers>
-          <Footer />
         </div>
       </body>
     </html>
