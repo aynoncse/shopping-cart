@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { auth, googleProvider } from '../lib/firebase';
-import { signInWithPopup, signOut } from 'firebase/auth';
+import { onIdTokenChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { setUser, logout } from '../store/authSlice';
 
 export default function LoginButton() {
@@ -11,22 +11,7 @@ export default function LoginButton() {
 
   const handleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-
-      // Get the Firebase ID token
-      const idToken = await user.getIdToken();
-
-      dispatch(
-        setUser({
-          user: {
-            uid: user.uid,
-            email: user.email,
-            name: user.displayName,
-          },
-          token: idToken,
-        }),
-      );
+      await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error('Sign in error:', error);
     }
@@ -38,7 +23,7 @@ export default function LoginButton() {
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    const unsubscribe = onIdTokenChanged(auth, async (user) => {
       if (user) {
         const idToken = await user.getIdToken();
 
