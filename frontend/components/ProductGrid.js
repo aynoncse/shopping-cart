@@ -1,39 +1,49 @@
+'use client';
+
 import ProductList from './ProductList';
 import ProductListError from './ProductListError';
+import { useGetProductsQuery } from '@/store/api';
 
-async function fetchProducts(page = 1, perPage = 12) {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
-  const response = await fetch(
-    `${baseUrl}/v1/products?page=${page}&per_page=${perPage}`,
-  );
-  if (!response.ok) throw new Error('Failed to fetch products');
-  const payload = await response.json();
+export default function ProductGrid() {
+  const { data, isLoading, isError } = useGetProductsQuery({
+    page: 1,
+    per_page: 12,
+  });
 
-  return {
-    data: payload.data || [],
-    meta: payload.meta || null,
-  };
-}
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div
+            key={index}
+            className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
+          >
+            <div className="aspect-square animate-pulse bg-gray-100" />
+            <div className="space-y-3 p-4">
+              <div className="h-5 w-3/4 animate-pulse rounded bg-gray-100" />
+              <div className="h-4 w-full animate-pulse rounded bg-gray-100" />
+              <div className="h-4 w-2/3 animate-pulse rounded bg-gray-100" />
+              <div className="h-10 w-full animate-pulse rounded bg-gray-100" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
-export default async function ProductGrid() {
-  let initialData;
-
-  try {
-    initialData = await fetchProducts(1, 12);
-  } catch {
+  if (isError || !data) {
     return (
       <ProductListError message="Failed to load products right now. Please try again shortly." />
     );
   }
 
-  const productIds = (initialData.data || []).map((product) => product.id).join('-');
+  const productIds = data.data.map((product) => product.id).join('-');
 
   return (
     <ProductList
-      key={`${initialData.meta?.current_page}-${initialData.meta?.last_page}-${productIds}`}
-      initialProducts={initialData.data}
-      initialMeta={initialData.meta}
+      key={`${data.meta?.current_page}-${data.meta?.last_page}-${productIds}`}
+      initialProducts={data.data}
+      initialMeta={data.meta}
     />
   );
 }
