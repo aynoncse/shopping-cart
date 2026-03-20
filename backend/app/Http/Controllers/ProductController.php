@@ -11,6 +11,17 @@ class ProductController extends Controller
     {
         $perPage = $request->input('per_page', 12);
         $products = Product::latest()->paginate($perPage);
-        return response()->json($products);
+
+        return $this->successResponse(
+            $products->items(),
+            'Products retrieved successfully.',
+            200,
+            [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+            ]
+        );
     }
 }

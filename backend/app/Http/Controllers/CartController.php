@@ -15,7 +15,7 @@ class CartController extends Controller
     public function index()
     {
         $cart = Auth::user()->cartItems()->with('product')->get();
-        return response()->json($cart);
+        return $this->successResponse($cart, 'Cart retrieved successfully.');
     }
 
     public function sync(SyncCartRequest $request)
@@ -51,6 +51,6 @@ class CartController extends Controller
         });
 
         $cart = Cart::where('user_id', $user->id)->with('product')->get();
-        return response()->json($cart);
+        return $this->successResponse($cart, 'Cart synchronized successfully.');
     }
 }
