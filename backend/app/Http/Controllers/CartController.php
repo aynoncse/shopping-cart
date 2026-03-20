@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SyncCartRequest;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -20,23 +21,34 @@ class CartController extends Controller
     public function sync(SyncCartRequest $request)
     {
         $user = Auth::user();
-        $items = $request->input('items');
+        $items = collect($request->validated('items', []));
 
-        // Delete all existing cart items for this user
-        Cart::where('user_id', $user->id)->delete();
+        DB::transaction(function () use ($user, $items) {
+            $productIds = $items->pluck('product_id')->all();
 
-        // Prepare items for insertion
-        $cartItems = collect($items)->map(function ($item) use ($user) {
-            return [
-                'user_id'    => $user->id,
-                'product_id' => $item['product_id'],
-                'quantity'   => $item['quantity'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        })->toArray();
+            $query = Cart::where('user_id', $user->id);
 
-        Cart::insert($cartItems);
+            if (empty($productIds)) {
+                $query->delete();
+                return;
+            }
+
+            $query->whereNotIn('product_id', $productIds)->delete();
+
+            Cart::upsert(
+                $items->map(function ($item) use ($user) {
+                    return [
+                        'user_id' => $user->id,
+                        'product_id' => $item['product_id'],
+                        'quantity' => $item['quantity'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                })->all(),
+                ['user_id', 'product_id'],
+                ['quantity', 'updated_at']
+            );
+        });
 
         $cart = Cart::where('user_id', $user->id)->with('product')->get();
         return response()->json($cart);

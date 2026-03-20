@@ -23,8 +23,8 @@ class SyncCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'items' => 'array',
-            'items.*.product_id' => 'required|integer|exists:products,id',
+            'items' => 'required|array',
+            'items.*.product_id' => 'required|integer|distinct|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
         ];
     }
@@ -37,8 +37,11 @@ class SyncCartRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'items.required' => 'Items are required.',
+            'items.array' => 'Items must be an array.',
             'items.*.product_id.required' => 'Product ID is required.',
             'items.*.product_id.integer' => 'Product ID must be an integer.',
+            'items.*.product_id.distinct' => 'Duplicate product IDs are not allowed.',
             'items.*.product_id.exists' => 'Product ID does not exist.',
             'items.*.quantity.required' => 'Quantity is required.',
             'items.*.quantity.integer' => 'Quantity must be an integer.',
