@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'firebase' => [
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+        'issuer' => env('FIREBASE_ISSUER', env('FIREBASE_PROJECT_ID') ? 'https://securetoken.google.com/' . env('FIREBASE_PROJECT_ID') : null),
+        'public_keys_url' => env('FIREBASE_PUBLIC_KEYS_URL', 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com'),
+    ],
+
 ];
