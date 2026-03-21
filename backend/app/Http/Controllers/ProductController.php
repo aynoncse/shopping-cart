@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Services\Product\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    public function __construct(private readonly ProductService $productService)
+    {
+    }
+
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 12);
-        $products = Product::latest()->paginate($perPage);
+        $products = $this->productService->getPaginatedProducts($perPage);
 
         return $this->successResponse(
             $products->items(),

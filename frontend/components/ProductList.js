@@ -42,6 +42,7 @@ export default function ProductList({
           />
         ))}
       </div>
+      
       <ProductListLoadMore
         hasMore={hasMore}
         isLoadingMore={isLoadingMore}
