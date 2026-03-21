@@ -23,7 +23,7 @@ class SyncCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'items' => 'required|array',
+            'items' => 'present|array',
             'items.*.product_id' => 'required|integer|distinct|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
         ];
@@ -37,7 +37,7 @@ class SyncCartRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'items.required' => 'Items are required.',
+            'items.present' => 'Items are required.',
             'items.array' => 'Items must be an array.',
             'items.*.product_id.required' => 'Product ID is required.',
             'items.*.product_id.integer' => 'Product ID must be an integer.',

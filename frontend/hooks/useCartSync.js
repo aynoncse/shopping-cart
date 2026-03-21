@@ -16,16 +16,52 @@ export default function useCartSync() {
   const [syncCart] = useSyncCartMutation();
   const dispatch = useDispatch();
   const timeoutRef = useRef(null);
-  const skipNextSyncRef = useRef(false);
+  const latestCartItemsRef = useRef(cartItems);
+  const latestTokenRef = useRef(token);
+  const latestHydratedRef = useRef(isHydrated);
+  const latestSyncStatusRef = useRef(syncStatus);
 
   useEffect(() => {
-    if (!token || !isHydrated) {
-      skipNextSyncRef.current = false;
-      return;
-    }
+    latestCartItemsRef.current = cartItems;
+    latestTokenRef.current = token;
+    latestHydratedRef.current = isHydrated;
+    latestSyncStatusRef.current = syncStatus;
+  }, [cartItems, isHydrated, syncStatus, token]);
 
-    skipNextSyncRef.current = true;
-  }, [token, isHydrated]);
+  useEffect(() => {
+    const flushPendingSync = () => {
+      if (
+        latestSyncStatusRef.current !== 'dirty' ||
+        !latestHydratedRef.current ||
+        !latestTokenRef.current
+      ) {
+        return;
+      }
+
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/v1/cart/sync`, {
+        method: 'POST',
+        keepalive: true,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${latestTokenRef.current}`,
+        },
+        body: JSON.stringify({
+          items: latestCartItemsRef.current.map(({ product_id, quantity }) => ({
+            product_id,
+            quantity,
+          })),
+        }),
+      }).catch(() => {});
+    };
+
+    window.addEventListener('pagehide', flushPendingSync);
+    window.addEventListener('beforeunload', flushPendingSync);
+
+    return () => {
+      window.removeEventListener('pagehide', flushPendingSync);
+      window.removeEventListener('beforeunload', flushPendingSync);
+    };
+  }, []);
 
   useEffect(() => {
     if (!token || !isHydrated) {
@@ -33,11 +69,6 @@ export default function useCartSync() {
     }
 
     if (syncStatus !== 'dirty') {
-      return;
-    }
-
-    if (skipNextSyncRef.current) {
-      skipNextSyncRef.current = false;
       return;
     }
 
