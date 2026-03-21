@@ -49,6 +49,11 @@ const cartSlice = createSlice({
       state.syncError = action.payload;
     },
 
+    rollbackToLastSynced: (state) => {
+      state.items = state.lastSyncedItems;
+      state.syncStatus = 'idle';
+    },
+
     addItem: (state, action) => {
       const { product, quantity = 1 } = action.payload;
       const existingItem = state.items.find((item) => item.product.id === product.id);
@@ -87,6 +92,8 @@ const cartSlice = createSlice({
 
       if (quantity <= 0) {
         state.items = state.items.filter((cartItem) => cartItem.product_id !== productId);
+        state.syncStatus = 'dirty';
+        state.syncError = null;
         return;
       }
 
@@ -126,6 +133,7 @@ export const {
   markSyncStarted,
   markSyncSuccess,
   markSyncFailed,
+  rollbackToLastSynced,
   addItem,
   increment,
   setQuantity,

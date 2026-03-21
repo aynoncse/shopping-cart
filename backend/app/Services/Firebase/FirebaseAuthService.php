@@ -36,15 +36,7 @@ class FirebaseAuthService
 
         $decoded = JWT::decode($token, new Key($publicKeys[$kid], 'RS256'));
         $this->validateClaims($decoded);
-
-        $user = User::firstOrCreate(
-            ['firebase_uid' => $decoded->sub],
-            [
-                'name' => $decoded->name ?? '',
-                'email' => $decoded->email ?? '',
-                'avatar' => $decoded->picture ?? '',
-            ]
-        );
+        $user = $this->resolveUser($decoded);
 
         $this->syncUserProfile($user, $decoded);
 
@@ -105,6 +97,7 @@ class FirebaseAuthService
     private function syncUserProfile(User $user, object $decoded): void
     {
         $user->fill([
+            'firebase_uid' => $decoded->sub,
             'name' => $decoded->name ?? $user->name,
             'email' => $decoded->email ?? $user->email,
             'avatar' => $decoded->picture ?? $user->avatar,
@@ -134,5 +127,34 @@ class FirebaseAuthService
 
             return $keys;
         });
+    }
+
+    private function resolveUser(object $decoded): User
+    {
+        $firebaseUid = (string) $decoded->sub;
+        $email = $decoded->email ?? null;
+
+        $user = User::where('firebase_uid', $firebaseUid)->first();
+
+        if ($user) {
+            return $user;
+        }
+
+        if ($email) {
+            $user = User::where('email', $email)->first();
+
+            if ($user) {
+                $user->firebase_uid = $firebaseUid;
+
+                return $user;
+            }
+        }
+
+        return new User([
+            'firebase_uid' => $firebaseUid,
+            'name' => $decoded->name ?? '',
+            'email' => $email ?? '',
+            'avatar' => $decoded->picture ?? '',
+        ]);
     }
 }

@@ -1,7 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSyncCartMutation } from '@/store/api';
-import { markSyncFailed, markSyncStarted, markSyncSuccess } from '@/store/cartSlice';
+import {
+  markSyncFailed,
+  markSyncStarted,
+  markSyncSuccess,
+  rollbackToLastSynced,
+} from '@/store/cartSlice';
 
 export default function useCartSync() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -46,6 +51,7 @@ export default function useCartSync() {
         const syncedItems = await syncCart(cartItems).unwrap();
         dispatch(markSyncSuccess(syncedItems));
       } catch (error) {
+        dispatch(rollbackToLastSynced());
         dispatch(markSyncFailed(error?.data?.message || 'Cart sync failed.'));
         console.error('Cart sync failed:', error);
       }
