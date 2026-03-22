@@ -105,19 +105,29 @@ _(On Windows standard command prompt, use `copy` instead of `cp`)_
 Typical values to update:
 
 ```env
-APP_URL=http://127.0.0.1:8000
-DB_CONNECTION=sqlite
-
 FIREBASE_PROJECT_ID=your-firebase-project-id
 FIREBASE_ISSUER=https://securetoken.google.com/your-firebase-project-id
 FIREBASE_PUBLIC_KEYS_URL=https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
-
-SESSION_DRIVER=database
-QUEUE_CONNECTION=database
-CACHE_STORE=database
 ```
 
 > **Note:** `FIREBASE_ISSUER` can be derived from `FIREBASE_PROJECT_ID`, but setting it explicitly keeps the configuration clear.
+
+### Backend Setup
+
+Install dependencies and start the Laravel development server:
+
+```bash
+cd backend
+composer install
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
+
+> **Note:** The storage directory is typically linked by default. However, if uploaded files or images are missing, you may need to manually link the storage path by running:
+> `php artisan storage:link`
+
+The standard backend URL is: `http://127.0.0.1:8000`
 
 #### Frontend `frontend/.env.local`
 
@@ -142,21 +152,6 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ```
 
-### Backend Setup
-
-Install dependencies and start the Laravel development server:
-
-```bash
-cd backend
-composer install
-php artisan key:generate
-php artisan migrate --seed
-php artisan storage:link
-php artisan serve
-```
-
-The standard backend URL is: `http://127.0.0.1:8000`
-
 ### Frontend Setup
 
 Install dependencies and start the Next.js development server:
@@ -177,10 +172,16 @@ Base API URL: `http://127.0.0.1:8000/api/v1`
 
 A ready-to-use Postman collection and environment are included in the repository to help you test the API quickly:
 
-- **Collection:** `backend/postman/Shopping_Cart_API.json`
-- **Environment:** `backend/postman/Local_Environment.json`
+- **Collection:** [`Shopping_Cart_API.json`](./backend/postman/Shopping_Cart_API.json)
+- **Environment:** [`Local_Environment.json`](./backend/postman/Local_Environment.json)
 
-Import these files into your Postman workspace to explore the available endpoints.
+**How to Use:**
+
+1. Open [Postman](https://www.postman.com/downloads/).
+2. Click the **Import** button near your workspaces.
+3. Select and upload the two JSON files listed above.
+4. In the top-right environment selector in Postman, ensure **Local Environment** is selected.
+5. You can now test the available API endpoints!
 
 ### `GET /products` (Public)
 
