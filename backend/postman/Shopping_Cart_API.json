@@ -1,0 +1,139 @@
+{
+  "info": {
+    "_postman_id": "d323488c-4346-4932-b834-537468e5c548",
+    "name": "shopping-cart-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13587002"
+  },
+  "item": [
+    {
+      "name": "Get Products",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/products?page=1&per_page=12",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "products"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "12"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Cart",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/cart",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "cart"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sync Cart",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"items\": [\r\n  {\r\n    \"product_id\": 460,\r\n    \"quantity\": 1\r\n  },\r\n  {\r\n    \"product_id\": 461,\r\n    \"quantity\": 1\r\n  },\r\n  {\r\n    \"product_id\": 464,\r\n    \"quantity\": 4\r\n  }\r\n]\r\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/v1/cart/sync",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "cart",
+            "sync"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjczMmNhOTY3MTNiMWRkMTcyMzg1MDg0Y2U5ZjQzODFhZDAwY2VjZTQiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU2Fkb3IgVWRkaW4gQmh1aXlhbiIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLZ2NOVDBjbXBDR3c2U3kxb2Z3QWVySVF3ZGhBdkw0amU1dXdCTTVHWjhpWmJ2WHFzPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3Nob3BwaW5nLWNhcnQtdGFwbG9vbSIsImF1ZCI6InNob3BwaW5nLWNhcnQtdGFwbG9vbSIsImF1dGhfdGltZSI6MTc3NDE2NDU3OCwidXNlcl9pZCI6IjdwOW4ybU93M2tQaktxeGxSWnFnZWhXWHRPRjIiLCJzdWIiOiI3cDluMm1PdzNrUGpLcXhsUlpxZ2VoV1h0T0YyIiwiaWF0IjoxNzc0MTczMjQ3LCJleHAiOjE3NzQxNzY4NDcsImVtYWlsIjoiYXlub25jc2VAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMTY1Nzc5NjU2MTM3OTQwNDA0NDQiXSwiZW1haWwiOlsiYXlub25jc2VAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.FTzigblwMBQtb0JPVHKxbOa4OMnV3fSAgHi6GHHjHZBeRmujdh5AA5IJgviyCoLMLqwWWr2GrttelyftKALqr5ugnPSt7wPX2oAKcMX0V8zL172oLRINsZ2UwjNR40faIEyDm1N5IM2_yLdJfD_9IdE5Dp0IwQtheODENPm0gJl8H6PqdCDRHRbQ4xpq_ro2Hml7URC3A8Sk9oFLjGYjiJCVGf_Hp7iGDTPMGB7qIvY4lsY7DcHeBaCe147XF2NW9CIGY0X3A4ERX077_5EKC_ulqduuFE87yYgTUEJClsBafvNb7ngFJ_uch68E4qpYabtWrchZMVFawWaR_36Ebg",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
