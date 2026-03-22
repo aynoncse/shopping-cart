@@ -46,11 +46,13 @@ export default function LoginButton() {
 
   if (user) {
     return (
-      <div className="flex items-center space-x-4">
-        <span className="text-gray-400">Welcome, {user.name}</span>
+      <div className="flex items-center gap-2 sm:gap-4">
+        <span className="hidden text-sm text-gray-400 sm:inline">
+          Welcome, {user.name}
+        </span>
         <button
           onClick={handleSignOut}
-          className="border border-gray-300 rounded-md px-4 py-2 hover:bg-red-500 hover:text-white transition">
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-red-500 hover:text-white transition sm:px-4">
           Sign Out
         </button>
       </div>
@@ -60,7 +62,7 @@ export default function LoginButton() {
   return (
     <button
       onClick={handleSignIn}
-      className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition">
+      className="site-bg site-bg-hover rounded-md px-3 py-2 text-sm text-white transition sm:px-6">
       Sign in with Google
     </button>
   );

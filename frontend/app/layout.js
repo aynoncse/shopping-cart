@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
         <div className="min-h-screen flex flex-col">
           <Providers>
             <Navbar />
-            <main className="container mx-auto px-4 grow">{children}</main>
+            <main className="mx-auto w-full max-w-7xl grow px-3 sm:px-4 lg:px-6">{children}</main>
             <Footer />
             <CartDrawer />
             <ToasterProvider />

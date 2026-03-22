@@ -1,1 +1,72 @@
 @import "tailwindcss";
+
+:root {
+    --site-base-color: #222831;
+    --site-base-color-hover: #31363f;
+}
+
+.site-text {
+    color: var(--site-base-color);
+}
+
+.site-bg {
+    background-color: var(--site-base-color);
+}
+
+.site-bg-hover:hover {
+    background-color: var(--site-base-color-hover);
+}
+
+.site-hover-text:hover {
+    color: var(--site-base-color);
+}
+
+.site-ring:focus-visible {
+    --tw-ring-color: var(--site-base-color);
+}
+.animated-border-card {
+    position: relative;
+    --card-radius: 0.125rem;
+    border-radius: var(--card-radius);
+    border: 1px solid #e5e7eb;
+
+    background-color: white;
+
+    box-sizing: border-box;
+
+    transition: box-shadow 220ms ease, transform 220ms ease;
+}
+
+.animated-border-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--card-radius);
+    background:
+        linear-gradient(var(--site-base-color) 0 0) top left / 0 1px no-repeat,
+        linear-gradient(var(--site-base-color) 0 0) top left / 1px 0 no-repeat,
+        linear-gradient(var(--site-base-color) 0 0) bottom right / 0 1px no-repeat,
+        linear-gradient(var(--site-base-color) 0 0) bottom right / 1px 0 no-repeat;
+    transition: background-size 0.32s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.animated-border-card:hover {
+    border-color: transparent;
+    box-shadow: 0 10px 30px rgba(34, 40, 49, 0.08);
+    transform: translateY(-2px);
+}
+
+.animated-border-card:hover::after {
+    background-size:
+        100% 1px,
+        1px 100%,
+        100% 1px,
+        1px 100%;
+}
+
+.animated-border-card>* {
+    position: relative;
+    z-index: 2;
+}

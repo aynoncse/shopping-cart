@@ -46,8 +46,8 @@ export default function Cart() {
       {cartItems.map((item) => (
         <div
           key={item.product_id}
-          className="flex items-start space-x-3 border-b border-gray-100 pb-4 last:border-0">
-          <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden shrink-0">
+          className="flex items-start gap-3 border-b border-gray-100 pb-4 last:border-0">
+          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-gray-100 sm:h-16 sm:w-16">
             {item.product?.image ? (
               <Image
                 src={item.product.image}
@@ -70,10 +70,10 @@ export default function Cart() {
             <p className="text-xs text-gray-500 mt-0.5">
               ${item.product?.price?.toFixed(2)} each
             </p>
-            <div className="flex items-center mt-2 space-x-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2">
               <button
                 onClick={() => dispatch(decrement(item.product_id))}
-                className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 transition"
+                className="flex h-7 w-7 items-center justify-center rounded border border-gray-300 hover:bg-gray-100 transition"
                 aria-label="Decrease quantity">
                 -
               </button>
@@ -85,18 +85,18 @@ export default function Cart() {
                 onChange={(event) =>
                   handleQuantityChange(item.product_id, event.target.value)
                 }
-                className="h-8 w-16 rounded border border-gray-300 px-2 text-center text-sm font-medium text-gray-800"
+                className="h-8 w-14 rounded border border-gray-300 px-2 text-center text-sm font-medium text-gray-800 sm:w-16"
                 aria-label={`Quantity for ${item.product?.name || 'cart item'}`}
               />
               <button
                 onClick={() => dispatch(increment(item.product_id))}
-                className="w-6 h-6 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 transition"
+                className="flex h-7 w-7 items-center justify-center rounded border border-gray-300 hover:bg-gray-100 transition"
                 aria-label="Increase quantity">
                 +
               </button>
               <button
                 onClick={() => dispatch(removeItem(item.product_id))}
-                className="ml-auto text-red-500 hover:text-red-700 text-sm font-medium"
+                className="text-sm font-medium text-red-500 hover:text-red-700 sm:ml-auto"
                 aria-label="Remove item">
                 Remove
               </button>

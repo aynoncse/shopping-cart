@@ -18,7 +18,7 @@ export default function CartDrawer() {
 
       {/* Drawer panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 z-50 h-full w-full bg-white shadow-2xl transition-transform duration-300 ease-out sm:w-96 ${
           isOpen ? 'translate-x-0' : 'translate-x-full pointer-events-none'
         }`}
         role="dialog"
@@ -26,8 +26,8 @@ export default function CartDrawer() {
         aria-hidden={!isOpen}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-5 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-800">Your Cart</h2>
+          <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4 sm:p-5">
+            <h2 className="text-lg font-semibold text-gray-800 sm:text-xl">Your Cart</h2>
             <button
               onClick={closeCart}
               className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
@@ -49,17 +49,17 @@ export default function CartDrawer() {
           </div>
 
           {/* Cart items*/}
-          <div className="flex-1 overflow-y-auto p-5">
+          <div className="flex-1 overflow-y-auto px-4 py-4 sm:p-5">
             <Cart />
           </div>
 
-          <div className="border-t border-gray-200 p-5">
-            <div className="flex justify-between text-lg font-semibold text-gray-800 mb-4">
+          <div className="border-t border-gray-200 px-4 py-4 sm:p-5">
+            <div className="mb-4 flex justify-between text-base font-semibold text-gray-800 sm:text-lg">
               <span>Total</span>
               <CartTotal />
             </div>
             <button
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="site-bg site-bg-hover site-ring w-full rounded-lg py-3 text-sm font-medium text-white transition-colors focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:text-base"
               disabled 
             >
               Proceed to Checkout
