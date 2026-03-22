@@ -53,7 +53,7 @@ export default function LoginButton() {
         </span>
         <button
           onClick={handleSignOut}
-          className="animated-border-card border-gray-300 px-3 py-2 text-sm transition sm:px-4">
+          className="animated-border bg-white border border-gray-200 rounded-sm px-3 py-2 text-sm transition sm:px-4">
           Sign Out
         </button>
       </div>
@@ -63,7 +63,7 @@ export default function LoginButton() {
   return (
     <button
       onClick={handleSignIn}
-      className="animated-border-card  py-2 shrink-0 text-sm flex gap-3 transition sm:px-6">
+      className="animated-border bg-white border border-gray-200 rounded-sm px-4 py-2 shrink-0 text-sm flex items-center justify-center gap-3 transition sm:px-6">
       <GoogleIcon />
       Sign in with Google
     </button>

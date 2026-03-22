@@ -1,6 +1,11 @@
 'use client';
 import { useSelector, useDispatch } from 'react-redux';
-import { increment, decrement, removeItem, setQuantity } from '../store/cartSlice';
+import {
+  increment,
+  decrement,
+  removeItem,
+  setQuantity,
+} from '../store/cartSlice';
 import Image from 'next/image';
 
 export default function Cart() {
@@ -47,14 +52,15 @@ export default function Cart() {
         <div
           key={item.product_id}
           className="flex items-start gap-3 border-b border-gray-100 pb-4 last:border-0">
-          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-gray-100 sm:h-16 sm:w-16">
+          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md bg-gray-100 sm:h-16 sm:w-16">
             {item.product?.image ? (
               <Image
                 src={item.product.image}
                 alt={item.product?.name || 'Cart item'}
-                width={64}
-                height={64}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 640px) 56px, 64px"
+                className="object-cover"
+                priority
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-gray-200 text-[10px] font-medium uppercase tracking-wide text-gray-500">

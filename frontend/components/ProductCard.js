@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function ProductCard({ product, onAddToCart }) {
   return (
-    <div className="group animated-border-card rounded-sm">
+    <div className="group animated-border bg-white border border-gray-200 rounded-sm">
       <div className="overflow-hidden rounded-sm bg-white">
         <div className="aspect-square overflow-hidden bg-gray-100">
           <Image
@@ -11,6 +11,9 @@ export default function ProductCard({ product, onAddToCart }) {
             width={400}
             height={400}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="eager"
+            priority={true}
+            fetchPriority="high"
           />
         </div>
 

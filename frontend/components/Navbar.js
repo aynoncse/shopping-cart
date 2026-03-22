@@ -3,6 +3,7 @@
 import LoginButton from './LoginButton';
 import { useSelector } from 'react-redux';
 import { useCartDrawer } from '@/context/CartDrawerContext';
+import Link from 'next/link';
 
 export default function Navbar() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -15,7 +16,7 @@ export default function Navbar() {
         <div className="flex min-h-16 items-center justify-between gap-3 py-2">
           {/* Logo / Brand */}
           <h1 className="site-text text-xl font-bold sm:text-2xl">
-            ShopCart
+            <Link href="/">ShopCart</Link>
           </h1>
 
           {/* Right side: cart icon + login */}

@@ -25,49 +25,44 @@
     --tw-ring-color: var(--site-base-color);
 }
 
-.animated-border-card {
-    position: relative;
-    --card-radius: 0.125rem;
-    border-radius: var(--card-radius);
-    border: 1px solid #e5e7eb;
+@layer components {
+    .animated-border {
+        position: relative;
+        box-sizing: border-box;
+        transition: box-shadow 220ms ease, transform 220ms ease;
+    }
 
-    background-color: white;
+    .animated-border::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: 3px;
+        background:
+            linear-gradient(var(--site-base-color) 0 0) top left / 0 1px no-repeat,
+            linear-gradient(var(--site-base-color) 0 0) top left / 1px 0 no-repeat,
+            linear-gradient(var(--site-base-color) 0 0) bottom right / 0 1px no-repeat,
+            linear-gradient(var(--site-base-color) 0 0) bottom right / 1px 0 no-repeat;
+        transition: background-size 0.32s ease;
+        pointer-events: none;
+        z-index: 10;
+    }
 
-    box-sizing: border-box;
+    .animated-border:hover {
+        border-color: transparent !important;
+        box-shadow: 0 10px 30px rgba(34, 40, 49, 0.08);
+        transform: translateY(-2px);
+    }
 
-    transition: box-shadow 220ms ease, transform 220ms ease;
-}
+    .animated-border:hover::after {
+        background-size:
+            100% 1px,
+            1px 100%,
+            100% 1px,
+            1px 100%;
+    }
 
-.animated-border-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: var(--card-radius);
-    background:
-        linear-gradient(var(--site-base-color) 0 0) top left / 0 1px no-repeat,
-        linear-gradient(var(--site-base-color) 0 0) top left / 1px 0 no-repeat,
-        linear-gradient(var(--site-base-color) 0 0) bottom right / 0 1px no-repeat,
-        linear-gradient(var(--site-base-color) 0 0) bottom right / 1px 0 no-repeat;
-    transition: background-size 0.32s ease;
-    pointer-events: none;
-    z-index: 10;
-}
-
-.animated-border-card:hover {
-    border-color: transparent;
-    box-shadow: 0 10px 30px rgba(34, 40, 49, 0.08);
-    transform: translateY(-2px);
-}
-
-.animated-border-card:hover::after {
-    background-size:
-        100% 1px,
-        1px 100%,
-        100% 1px,
-        1px 100%;
-}
-
-.animated-border-card>* {
-    position: relative;
-    z-index: 2;
+    .animated-border>* {
+        position: relative;
+        z-index: 2;
+    }
 }
