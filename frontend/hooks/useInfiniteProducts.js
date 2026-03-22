@@ -1,6 +1,11 @@
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { useLazyGetProductsQuery } from '../store/api';
 
+/**
+ * Removes duplicate products from the list based on their ID.
+ * @param {Array} products - The array of product objects to deduplicate.
+ * @returns {Array} The deduplicated array of products.
+ */
 const dedupeProducts = (products) => {
   const ids = new Set();
 
@@ -11,6 +16,15 @@ const dedupeProducts = (products) => {
   });
 };
 
+/**
+ * Custom hook for managing infinite scrolling of products.
+ * Uses IntersectionObserver to trigger loading more products when the user scrolls down.
+ * @param {Object} props
+ * @param {Array} props.initialProducts - The initial list of products loaded on the server.
+ * @param {Object} props.initialMeta - Pagination metadata from the initial server request.
+ * @param {number} props.perPage - Number of products mapped per page.
+ * @returns {Object} An object containing the product list, loading states, error, and an IntersectionObserver ref.
+ */
 export const useInfiniteProducts = ({
   initialProducts = [],
   initialMeta = null,
@@ -34,9 +48,16 @@ export const useInfiniteProducts = ({
     setPage(nextPage);
 
     try {
-      const nextData = await trigger({ page: nextPage, per_page: perPage }).unwrap();
-      setAllProducts((prev) => dedupeProducts([...prev, ...(nextData.data || [])]));
-      setHasMore((nextData.meta?.current_page || 1) < (nextData.meta?.last_page || 1));
+      const nextData = await trigger({
+        page: nextPage,
+        per_page: perPage,
+      }).unwrap();
+      setAllProducts((prev) =>
+        dedupeProducts([...prev, ...(nextData.data || [])]),
+      );
+      setHasMore(
+        (nextData.meta?.current_page || 1) < (nextData.meta?.last_page || 1),
+      );
     } catch {
       setPage((prev) => prev - 1);
     }

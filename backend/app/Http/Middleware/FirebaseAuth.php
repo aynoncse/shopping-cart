@@ -10,6 +10,17 @@ use Illuminate\Support\Facades\Log;
 
 class FirebaseAuth
 {
+    /**
+     * Handle an incoming request.
+     *
+     * This middleware checks if the incoming request contains a valid Firebase authentication token.
+     * If the token is invalid, it returns a 401 response with a JSON message indicating the token is invalid.
+     * If the token is valid, it sets the authenticated user using the Firebase authentication service and continues the request flow.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return \Illuminate\Http\Response
+     */
     public function handle(Request $request, Closure $next)
     {
         $token = $request->bearerToken();

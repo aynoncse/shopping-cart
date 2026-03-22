@@ -8,6 +8,10 @@ import {
   rollbackToLastSynced,
 } from '@/store/cartSlice';
 
+/**
+ * Custom hook to synchronize the Redux cart state with the backend API.
+ * Uses debouncing for efficient network requests and handles page unload events.
+ */
 export default function useCartSync() {
   const cartItems = useSelector((state) => state.cart.items);
   const isHydrated = useSelector((state) => state.cart.isHydrated);

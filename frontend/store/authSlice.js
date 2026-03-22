@@ -1,10 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+/**
+ * Initial state for the authentication slice.
+ * @type {{user: Object|null, token: string|null}}
+ */
 const initialState = {
   user: null,
   token: null,
 };
 
+/**
+ * Redux slice for managing user authentication state.
+ */
 const authSlice = createSlice({
   name: 'auth',
   initialState,

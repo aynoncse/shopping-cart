@@ -7,14 +7,26 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class FirebaseAuthService
+ *
+ * Service for verifying Firebase JWTs and authenticating users.
+ */
 class FirebaseAuthService
 {
+    /**
+     * Authenticate a user by verifying a Firebase ID token.
+     *
+     * @param string $token The JWT token.
+     * @return User
+     * @throws \RuntimeException
+     */
     public function authenticate(string $token): User
     {
         $header = $this->decodeHeader($token);
         $kid = $header['kid'] ?? null;
         $alg = $header['alg'] ?? null;
-        $typ = $header['typ'] ?? null;
+        $typ = $header['typ'] ?? null;  
 
         if (!$kid) {
             throw new \RuntimeException('No key ID in token header.');
@@ -43,6 +55,13 @@ class FirebaseAuthService
         return $user;
     }
 
+    /**
+     * Decode the token header to retrieve the key ID and algorithm.
+     *
+     * @param string $token The JWT token.
+     * @return array
+     * @throws \RuntimeException
+     */
     private function decodeHeader(string $token): array
     {
         $parts = explode('.', $token);
@@ -60,6 +79,13 @@ class FirebaseAuthService
         return $decoded;
     }
 
+    /**
+     * Validate the standard Firebase claims.
+     *
+     * @param object $decoded The decoded token payload.
+     * @return void
+     * @throws \RuntimeException
+     */
     private function validateClaims(object $decoded): void
     {
         $projectId = config('services.firebase.project_id');
@@ -94,6 +120,13 @@ class FirebaseAuthService
         }
     }
 
+    /**
+     * Sync data from the token into the user's profile and save if changed.
+     *
+     * @param User $user
+     * @param object $decoded
+     * @return void
+     */
     private function syncUserProfile(User $user, object $decoded): void
     {
         $user->fill([
@@ -108,6 +141,13 @@ class FirebaseAuthService
         }
     }
 
+    /**
+     * Fetch Google's public keys for verifying the token signature.
+     * Keys are cached automatically.
+     *
+     * @return array
+     * @throws \RuntimeException
+     */
     private function fetchPublicKeys(): array
     {
         return Cache::remember('firebase_public_keys', 3600, function () {
@@ -129,6 +169,13 @@ class FirebaseAuthService
         });
     }
 
+    /**
+     * Resolve the corresponding User model by Firebase UID or email,
+     * or instantiate a new model if neither matches.
+     *
+     * @param object $decoded
+     * @return User
+     */
     private function resolveUser(object $decoded): User
     {
         $firebaseUid = (string) $decoded->sub;
