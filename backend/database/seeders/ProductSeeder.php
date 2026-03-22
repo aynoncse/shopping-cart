@@ -25,7 +25,7 @@ class ProductSeeder extends Seeder
             'smart-watch.webp',
             'sunglass.jpg',
             'tshirt.webp',
-            'watter-bottle.jpg',
+            'watter-bottle.png',
             'wh950nb-black-01.webp',
             'whey-protein.webp',
             'yoga-mat.webp',
