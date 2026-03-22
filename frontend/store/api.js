@@ -15,7 +15,8 @@ export const api = createApi({
   tagTypes: ['Cart', 'Products'],
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: ({ page = 1, per_page = 12 } = {}) => `/v1/products?page=${page}&per_page=${per_page}`,
+      query: ({ page = 1, per_page = 12 } = {}) =>
+        `/v1/products?page=${page}&per_page=${per_page}`,
       transformResponse: (response) => ({
         data: response.data,
         meta: response.meta,
