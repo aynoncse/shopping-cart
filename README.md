@@ -9,6 +9,8 @@
 
 A full-stack shopping cart application featuring robust Firebase authentication, seamless product browsing, and persistent cart synchronization.
 
+🔗 **Live Demo:** [https://store-ecoma.up.railway.app](https://store-ecoma.up.railway.app)
+
 ## 📑 Table of Contents
 
 - [Features](#-features)
