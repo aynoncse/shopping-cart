@@ -1,76 +1,108 @@
-# Shopping Cart System
+# 🛒 Shopping Cart System
 
-A full-stack shopping cart application built with Laravel and Next.js, featuring Firebase authentication, product browsing, and persistent cart synchronization.
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
+![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-## Stack
+A full-stack shopping cart application featuring robust Firebase authentication, seamless product browsing, and persistent cart synchronization.
 
-- Backend: Laravel 12, PHP 8.2, Eloquent ORM
-- Frontend: Next.js 16, React 19
-- State management: Redux Toolkit
-- API integration: RTK Query
-- Authentication: Firebase Authentication with Google Sign-in
+## 📑 Table of Contents
 
-## Folder Structure
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Folder Structure](#-folder-structure)
+- [Prerequisites](#-prerequisites)
+- [Getting Started](#-getting-started)
+  - [Firebase Setup](#firebase-setup)
+  - [Environment Configuration](#environment-configuration)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [API Overview](#-api-overview)
+- [Architecture Notes](#-architecture-notes)
+- [Testing](#-testing)
+
+## ✨ Features
+
+- **Authentication:** Google sign-in integrated seamlessly with Firebase Authentication.
+- **Product Browsing:** Public product listing with pagination and client-side infinite scroll.
+- **Shopping Cart:**
+  - Authenticated and persistent cart access.
+  - Optimistic UI updates on the frontend for a snappy experience.
+  - Debounced batch cart synchronization to the backend.
+  - Cart persistence through backend reload (without relying solely on `localStorage`).
+- **Backend Architecture:** Standardized JSON API responses with robust service-layer business logic.
+
+## 🛠 Tech Stack
+
+### Backend (Laravel API)
+
+- Laravel 12.x
+- PHP 8.2+
+- SQLite (Default) / Eloquent ORM
+- Firebase JWT Auth
+
+### Frontend (Next.js Client)
+
+- Next.js 16 (App Router)
+- React 19
+- Redux Toolkit & RTK Query
+- Tailwind CSS 4
+
+## 📁 Folder Structure
 
 ```text
 shopping-cart/
-|- backend/   # Laravel API
-`- frontend/  # Next.js client
+├── backend/   # Laravel API application
+└── frontend/  # Next.js React client application
 ```
 
-## Features
+## ⚙️ Prerequisites
 
-- Google sign-in with Firebase Authentication
-- Public product listing with pagination and infinite scroll
-- Authenticated cart access
-- Optimistic cart updates on the frontend
-- Debounced batch cart sync to the backend
-- Cart persistence through backend reload, without localStorage
-- Standardized JSON API responses
-- Service-layer business logic on the backend
+Before you begin, ensure you have the following installed:
 
-## Setup
+- [PHP 8.2+](https://www.php.net/downloads.php) (Ensure the `pdo_sqlite` and `sqlite3` extensions are enabled in your `php.ini` for the default database to work)
+- [Composer](https://getcomposer.org/)
+- [Node.js 20+](https://nodejs.org/en/) & npm
+- A [Firebase](https://firebase.google.com/) account for authentication
 
-### Backend
+## 🚀 Getting Started
+
+### Installation
+
+Clone the repository and open your terminal at the project root:
+
+```bash
+git clone https://github.com/aynoncse/shopping-cart.git
+cd shopping-cart
+```
+
+_(Alternatively, if you downloaded the project as a ZIP file, simply extract it and navigate into the `shopping-cart` folder.)_
+
+### Firebase Setup
+
+1. Create a project in the [Firebase Console](https://console.firebase.google.com/).
+2. Navigate to **Authentication** and enable the **Google** sign-in provider.
+3. Add a **Web App** to your Firebase project to generate configuration keys.
+4. Note down your Firebase project ID, App ID, and keys. You will need them for the `.env` files.
+5. Add your frontend origin (e.g., `http://localhost:3000`) to the **Authorized domains** in Firebase Authentication settings.
+
+### Environment Configuration
+
+#### Backend `backend/.env`
+
+Copy the example file to create your local environment configuration:
 
 ```bash
 cd backend
-composer install
-copy .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-php artisan storage:link
-php artisan serve
+cp .env.example .env
 ```
 
-Default backend URL:
+_(On Windows standard command prompt, use `copy` instead of `cp`)_
 
-```text
-http://127.0.0.1:8000
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-copy .env.example .env.local
-npm run dev
-```
-
-Default frontend URL:
-
-```text
-http://localhost:3000
-```
-
-## Environment Configuration
-
-### Backend `backend/.env`
-
-Copy `backend/.env.example` to `backend/.env` and set the values you use locally.
-
-Typical values:
+Typical values to update:
 
 ```env
 APP_URL=http://127.0.0.1:8000
@@ -85,50 +117,77 @@ QUEUE_CONNECTION=database
 CACHE_STORE=database
 ```
 
-`FIREBASE_ISSUER` can be derived from `FIREBASE_PROJECT_ID`, but setting it explicitly keeps the configuration clear.
+> **Note:** `FIREBASE_ISSUER` can be derived from `FIREBASE_PROJECT_ID`, but setting it explicitly keeps the configuration clear.
 
-### Frontend `frontend/.env.local`
+#### Frontend `frontend/.env.local`
 
-Copy `frontend/.env.example` to `frontend/.env.local`.
+Copy the example file for the frontend:
+
+```bash
+cd frontend
+cp .env.example .env.local
+```
+
+_(On Windows standard command prompt, use `copy` instead of `cp`)_
+
+Populate it with your Firebase Web App config:
 
 ```env
 NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api
-NEXT_PUBLIC_FIREBASE_API_KEY=
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
-NEXT_PUBLIC_FIREBASE_APP_ID=
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ```
 
-## Firebase Setup
+### Backend Setup
 
-1. Create a Firebase project.
-2. Enable `Authentication`.
-3. Enable the `Google` sign-in provider.
-4. Add a Firebase web app.
-5. Copy the Firebase web config values into `frontend/.env.local`.
-6. Copy the Firebase project values into `backend/.env`.
-7. Add the frontend origin to the allowed auth domains in Firebase.
+Install dependencies and start the Laravel development server:
 
-## API Overview
-
-Base URL:
-
-```text
-http://127.0.0.1:8000/api/v1
+```bash
+cd backend
+composer install
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
+php artisan serve
 ```
 
-### `GET /products`
+The standard backend URL is: `http://127.0.0.1:8000`
 
-Public endpoint.
+### Frontend Setup
 
-Query params:
+Install dependencies and start the Next.js development server:
 
-- `page`
-- `per_page`
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-Response shape:
+The standard frontend URL is: `http://localhost:3000`
+
+## 📡 API Overview
+
+Base API URL: `http://127.0.0.1:8000/api/v1`
+
+### 📮 Postman Collection
+
+A ready-to-use Postman collection and environment are included in the repository to help you test the API quickly:
+
+- **Collection:** `backend/postman/Shopping_Cart_API.json`
+- **Environment:** `backend/postman/Local_Environment.json`
+
+Import these files into your Postman workspace to explore the available endpoints.
+
+### `GET /products` (Public)
+
+Retrieves paginated products. Supports `page` and `per_page` query parameters.
+
+<details>
+<summary>View Response Shape</summary>
 
 ```json
 {
@@ -144,17 +203,14 @@ Response shape:
 }
 ```
 
-### `GET /cart`
+</details>
 
-Protected endpoint.
+### `GET /cart` (Protected)
 
-Headers:
+Retrieves the authenticated user's cart. Requires `Authorization: Bearer <firebase_id_token>`.
 
-```text
-Authorization: Bearer <firebase_id_token>
-```
-
-Response shape:
+<details>
+<summary>View Response Shape</summary>
 
 ```json
 {
@@ -164,18 +220,16 @@ Response shape:
 }
 ```
 
-### `POST /cart/sync`
+</details>
 
-Protected endpoint.
+### `POST /cart/sync` (Protected)
 
-Headers:
+Synchronizes the cart state with the backend. Requires `Authorization: Bearer <firebase_id_token>`.
 
-```text
-Authorization: Bearer <firebase_id_token>
-Content-Type: application/json
-```
+<details>
+<summary>View Request/Response Shape</summary>
 
-Request body:
+**Request Body:**
 
 ```json
 {
@@ -186,15 +240,7 @@ Request body:
 }
 ```
 
-An empty cart is valid:
-
-```json
-{
-  "items": []
-}
-```
-
-Success response:
+**Success Response:**
 
 ```json
 {
@@ -204,7 +250,7 @@ Success response:
 }
 ```
 
-Validation error response:
+**Validation Error Response:**
 
 ```json
 {
@@ -214,43 +260,43 @@ Validation error response:
 }
 ```
 
-## Architecture Notes
+</details>
 
-### Backend
+## 🏗 Architecture Notes
 
-- Controllers are thin and only coordinate request validation, authentication context, and response formatting.
-- Service classes contain business logic:
+### Backend Architecture
+
+- **Thin Controllers:** They only coordinate request validation, authentication context, and response formatting.
+- **Service Layer:** Core business logic is encapsulated in services:
   - `App\Services\Product\ProductService`
   - `App\Services\Cart\CartService`
   - `App\Services\Firebase\FirebaseAuthService`
-- Firebase token verification is handled by custom middleware that delegates to the Firebase auth service.
-- Cart synchronization is transactional and uses `upsert` for bulk updates.
+- **Firebase Auth Integration:** Token verification is handled by custom middleware delegating to the Firebase auth service.
+- **Cart Sync:** Transactional and utilizes `upsert` for efficient bulk updates.
 
-### Frontend
+### Frontend Architecture
 
-- Redux Toolkit stores auth and cart state.
-- RTK Query manages API communication for products and cart operations.
-- Cart updates are optimistic on the client.
-- Cart synchronization is debounced and flushed on refresh/unload when needed.
-- Infinite scroll is handled client-side with RTK Query and `IntersectionObserver`.
-- Product and cart images are rendered with `next/image`.
+- **State Management:** Redux Toolkit handles auth and cart state.
+- **Data Fetching:** RTK Query manages API communication.
+- **UX Optimizations:**
+  - Cart changes update optimistically on the client.
+  - Cart sync is debounced and flushed on window refresh/unload dynamically.
+  - Infinite scroll utilizes RTK Query and `IntersectionObserver`.
+  - Next.js `next/image` is used for optimized image rendering.
 
-## Testing
+## 🧪 Testing
 
-Backend coverage currently focuses on API behavior:
+Backend test coverage currently focuses on core API behaviors:
 
-- product listing response shape
-- cart authentication protection
-- cart validation behavior
-- cart sync success behavior
+- Product listing response structures
+- Cart endpoint authentication protection
+- Cart validation and sync success logic
 
-Run:
+To run the backend tests:
 
 ```bash
 cd backend
 php artisan test
 ```
 
-Note:
-
-- In this environment, `php artisan test` may fail if PHP does not have the SQLite PDO driver enabled for the in-memory test database.
+> **Note:** In certain environments, `php artisan test` may fail if the SQLite PDO driver is not enabled for the in-memory test database.
