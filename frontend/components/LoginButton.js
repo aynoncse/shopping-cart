@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { auth, googleProvider } from '../lib/firebase';
 import { onIdTokenChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { setUser, logout } from '../store/authSlice';
+import GoogleIcon from './Icons/GoogleIcon';
 
 export default function LoginButton() {
   const dispatch = useDispatch();
@@ -52,7 +53,7 @@ export default function LoginButton() {
         </span>
         <button
           onClick={handleSignOut}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-red-500 hover:text-white transition sm:px-4">
+          className="animated-border-card border-gray-300 px-3 py-2 text-sm transition sm:px-4">
           Sign Out
         </button>
       </div>
@@ -62,7 +63,8 @@ export default function LoginButton() {
   return (
     <button
       onClick={handleSignIn}
-      className="site-bg site-bg-hover rounded-md px-3 py-2 text-sm text-white transition sm:px-6">
+      className="animated-border-card  py-2 shrink-0 text-sm flex gap-3 transition sm:px-6">
+      <GoogleIcon />
       Sign in with Google
     </button>
   );

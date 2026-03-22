@@ -24,6 +24,7 @@
 .site-ring:focus-visible {
     --tw-ring-color: var(--site-base-color);
 }
+
 .animated-border-card {
     position: relative;
     --card-radius: 0.125rem;

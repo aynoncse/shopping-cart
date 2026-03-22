@@ -16,7 +16,7 @@ export default function ProductGrid() {
         {Array.from({ length: 8 }).map((_, index) => (
           <div
             key={index}
-            className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
+            className="overflow-hidden border border-gray-100 bg-white shadow-sm"
           >
             <div className="aspect-square animate-pulse bg-gray-100" />
             <div className="space-y-3 p-3 sm:p-4">
