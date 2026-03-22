@@ -7,7 +7,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
+    baseUrl: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api`,
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.token;
       if (token) {
@@ -22,8 +22,9 @@ export const api = createApi({
      * Fetches a paginated list of products from the backend API.
      */
     getProducts: builder.query({
-      query: ({ page = 1, per_page = 12 } = {}) => `/v1/products?page=${page}&per_page=${per_page}`,
-      
+      query: ({ page = 1, per_page = 12 } = {}) =>
+        `/v1/products?page=${page}&per_page=${per_page}`,
+
       /**
        * Transforms the response from the backend API into a format that is
        * usable by the application.

@@ -42,20 +42,25 @@ export default function useCartSync() {
         return;
       }
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/v1/cart/sync`, {
-        method: 'POST',
-        keepalive: true,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${latestTokenRef.current}`,
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/cart/sync`,
+        {
+          method: 'POST',
+          keepalive: true,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${latestTokenRef.current}`,
+          },
+          body: JSON.stringify({
+            items: latestCartItemsRef.current.map(
+              ({ product_id, quantity }) => ({
+                product_id,
+                quantity,
+              }),
+            ),
+          }),
         },
-        body: JSON.stringify({
-          items: latestCartItemsRef.current.map(({ product_id, quantity }) => ({
-            product_id,
-            quantity,
-          })),
-        }),
-      }).catch(() => {});
+      ).catch(() => {});
     };
 
     window.addEventListener('pagehide', flushPendingSync);
