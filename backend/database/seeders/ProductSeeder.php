@@ -26,7 +26,7 @@ class ProductSeeder extends Seeder
             'sunglass.jpg',
             'tshirt.webp',
             'watter-bottle.png',
-            'wh950nb-black-01.webp',
+            'headphone.webp',
             'whey-protein.webp',
             'yoga-mat.webp',
         ];
