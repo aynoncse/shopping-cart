@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
+    const storagePath = '/storage/:path*';
     return [
       {
-        source: '/storage/:path*',
-        destination: 'http://localhost:8000/storage/:path*',
+        source: storagePath,
+        destination: process.env.NEXT_PUBLIC_API_URL + storagePath,
       },
     ];
   },
