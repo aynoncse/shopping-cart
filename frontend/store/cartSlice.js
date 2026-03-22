@@ -106,7 +106,9 @@ const cartSlice = createSlice({
      */
     addItem: (state, action) => {
       const { product, quantity = 1 } = action.payload;
-      const existingItem = state.items.find((item) => item.product.id === product.id);
+      const existingItem = state.items.find(
+        (item) => item.product.id === product.id,
+      );
       if (existingItem) {
         existingItem.quantity += quantity;
       } else {
@@ -152,7 +154,9 @@ const cartSlice = createSlice({
       }
 
       if (quantity <= 0) {
-        state.items = state.items.filter((cartItem) => cartItem.product_id !== productId);
+        state.items = state.items.filter(
+          (cartItem) => cartItem.product_id !== productId,
+        );
         state.syncStatus = 'dirty';
         state.syncError = null;
         return;
@@ -176,7 +180,9 @@ const cartSlice = createSlice({
         if (item.quantity > 1) {
           item.quantity -= 1;
         } else {
-          state.items = state.items.filter((item) => item.product_id !== productId);
+          state.items = state.items.filter(
+            (item) => item.product_id !== productId,
+          );
         }
 
         state.syncStatus = 'dirty';
@@ -184,13 +190,11 @@ const cartSlice = createSlice({
       }
     },
 
-/*************  ✨ Windsurf Command ⭐  *************/
     /**
      * Removes a product from the cart.
      * Marks the cart state as "dirty" and clears the sync error.
      * @param {number} payload The product ID to remove.
      */
-/*******  abbecc33-7655-489d-b34d-18692dc6f598  *******/
     removeItem: (state, action) => {
       const productId = action.payload;
       state.items = state.items.filter((item) => item.product_id !== productId);
