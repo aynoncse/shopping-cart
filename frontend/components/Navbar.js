@@ -24,7 +24,7 @@ export default function Navbar() {
           {/* Right side: wishlist, cart icon + login */}
           <div className="flex items-center gap-2 sm:gap-4">
             <Link
-              href="#"
+              href="/wishlist"
               className="site-hover-text relative p-2 text-gray-700 focus:outline-none transition-colors"
               aria-label="Open wishlist">
               <svg
