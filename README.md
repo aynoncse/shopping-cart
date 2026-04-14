@@ -7,7 +7,7 @@
 ![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-A full-stack shopping cart application featuring robust Firebase authentication, seamless product browsing, and persistent cart synchronization.
+A full-stack shopping cart application featuring robust Firebase authentication, seamless product browsing, persistent cart synchronization, and shareable wishlists.
 
 🔗 **Live Demo:** [https://store-ecoma.up.railway.app](https://store-ecoma.up.railway.app)
 
@@ -35,6 +35,10 @@ A full-stack shopping cart application featuring robust Firebase authentication,
   - Optimistic UI updates on the frontend for a snappy experience.
   - Debounced batch cart synchronization to the backend.
   - Cart persistence through backend reload (without relying solely on `localStorage`).
+- **Wishlist:**
+  - Authenticated wishlist management with optimistic UI updates.
+  - Global wishlist hydration so product hearts and navbar counts stay accurate after refresh.
+  - Public wishlist sharing via tokenized links.
 - **Backend Architecture:** Standardized JSON API responses with robust service-layer business logic.
 
 ## 🛠 Tech Stack
@@ -107,12 +111,16 @@ _(On Windows standard command prompt, use `copy` instead of `cp`)_
 Typical values to update:
 
 ```env
+APP_URL=http://127.0.0.1:8000
+FRONTEND_URL=http://localhost:3000
 FIREBASE_PROJECT_ID=your-firebase-project-id
 FIREBASE_ISSUER=https://securetoken.google.com/your-firebase-project-id
 FIREBASE_PUBLIC_KEYS_URL=https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
 ```
 
-> **Note:** `FIREBASE_ISSUER` can be derived from `FIREBASE_PROJECT_ID`, but setting it explicitly keeps the configuration clear.
+> **Notes:**
+> - `FRONTEND_URL` is used to generate full public wishlist share links from the backend.
+> - `FIREBASE_ISSUER` can be derived from `FIREBASE_PROJECT_ID`, but setting it explicitly keeps the configuration clear.
 
 ### Backend Setup
 
@@ -265,6 +273,110 @@ Synchronizes the cart state with the backend. Requires `Authorization: Bearer <f
 
 </details>
 
+### `GET /wishlist` (Protected)
+
+Retrieves the authenticated user's wishlist. Requires `Authorization: Bearer <firebase_id_token>`.
+
+<details>
+<summary>View Response Shape</summary>
+
+```json
+{
+  "success": true,
+  "message": "Wishlist retrieved successfully.",
+  "data": []
+}
+```
+
+</details>
+
+### `POST /wishlist/toggle` (Protected)
+
+Adds a product to the authenticated user's wishlist if it does not exist, or removes it if it already exists.
+
+<details>
+<summary>View Request/Response Shape</summary>
+
+**Request Body:**
+
+```json
+{
+  "product_id": 1
+}
+```
+
+**Success Response:**
+
+```json
+{
+  "success": true,
+  "message": "Wishlist updated successfully.",
+  "data": {
+    "items": [],
+    "added": true
+  }
+}
+```
+
+**Validation Error Response:**
+
+```json
+{
+  "success": false,
+  "message": "The given data was invalid.",
+  "errors": {}
+}
+```
+
+</details>
+
+### `GET /wishlist/share` (Protected)
+
+Returns a full public share URL for the authenticated user's wishlist.
+
+<details>
+<summary>View Response Shape</summary>
+
+```json
+{
+  "success": true,
+  "message": "Wishlist share link retrieved successfully.",
+  "data": {
+    "share_url": "http://localhost:3000/wishlist/{token}"
+  }
+}
+```
+
+</details>
+
+### `GET /wishlist/public/{token}` (Public)
+
+Retrieves the products in a shared wishlist by share token.
+
+<details>
+<summary>View Response Shape</summary>
+
+**Success Response:**
+
+```json
+{
+  "success": true,
+  "message": "Wishlist retrieved successfully.",
+  "data": []
+}
+```
+
+**Not Found Response:**
+
+```json
+{
+  "success": false,
+  "message": "Wishlist not found."
+}
+```
+
+</details>
+
 ## 🏗 Architecture Notes
 
 ### Backend Architecture
@@ -273,17 +385,21 @@ Synchronizes the cart state with the backend. Requires `Authorization: Bearer <f
 - **Service Layer:** Core business logic is encapsulated in services:
   - `App\Services\Product\ProductService`
   - `App\Services\Cart\CartService`
+  - `App\Services\Wishlist\WishlistService`
   - `App\Services\Firebase\FirebaseAuthService`
 - **Firebase Auth Integration:** Token verification is handled by custom middleware delegating to the Firebase auth service.
 - **Cart Sync:** Transactional and utilizes `upsert` for efficient bulk updates.
+- **Wishlist Sharing:** Public wishlist links are backed by a unique `wishlist_share_token` stored on the user model.
 
 ### Frontend Architecture
 
-- **State Management:** Redux Toolkit handles auth and cart state.
+- **State Management:** Redux Toolkit handles auth, cart, and wishlist state.
 - **Data Fetching:** RTK Query manages API communication.
 - **UX Optimizations:**
   - Cart changes update optimistically on the client.
+  - Wishlist toggles update optimistically on the client.
   - Cart sync is debounced and flushed on window refresh/unload dynamically.
+  - Wishlist state is hydrated globally so navbar counts and product heart states stay consistent across pages.
   - Infinite scroll utilizes RTK Query and `IntersectionObserver`.
   - Next.js `next/image` is used for optimized image rendering.
 
@@ -294,6 +410,7 @@ Backend test coverage currently focuses on core API behaviors:
 - Product listing response structures
 - Cart endpoint authentication protection
 - Cart validation and sync success logic
+- Wishlist endpoint authentication, toggle behavior, share-link generation, and public access
 
 To run the backend tests:
 

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'firebase_uid',
         'avatar',
+        'wishlist_share_token',
     ];
 
     /**
@@ -57,5 +58,15 @@ class User extends Authenticatable
     public function cartItems()
     {
         return $this->hasMany(Cart::class);
+    }
+
+    /**
+     * Get the wishlist items for the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function wishlistItems()
+    {
+        return $this->hasMany(Wishlist::class);
     }
 }
