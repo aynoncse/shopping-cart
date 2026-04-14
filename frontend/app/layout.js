@@ -5,6 +5,7 @@ import { Providers } from './providers';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import ToasterProvider from '@/components/ToasterProvider';
+import WishlistInitializer from '@/components/WishlistInitializer';
 
 // Optimize fonts using next/font
 const inter = Inter({
@@ -25,13 +26,15 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.className} antialiased min-h-screen flex flex-col`}>
         <Providers>
-          <Navbar />
-          <main className="mx-auto w-full max-w-7xl grow px-3 sm:px-4 lg:px-6">
-            {children}
-          </main>
-          <Footer />
-          <CartDrawer />
-          <ToasterProvider />
+          <WishlistInitializer>
+            <Navbar />
+            <main className="mx-auto w-full max-w-7xl grow px-3 sm:px-4 lg:px-6">
+              {children}
+            </main>
+            <Footer />
+            <CartDrawer />
+            <ToasterProvider />
+          </WishlistInitializer>
         </Providers>
       </body>
     </html>

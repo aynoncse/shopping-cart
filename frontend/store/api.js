@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 /**
  * RTK Query API service for communicating with the backend API.
- * Handles fetching products, retrieving the cart, and synchronizing the cart.
+ * Handles fetching products, cart state, and wishlist state.
  */
 export const api = createApi({
   reducerPath: 'api',
@@ -16,7 +16,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Cart', 'Products'],
+  tagTypes: ['Cart', 'Products', 'Wishlist'],
   endpoints: (builder) => ({
     /**
      * Fetches a paginated list of products from the backend API.
@@ -67,6 +67,30 @@ export const api = createApi({
       }),
       transformResponse: (response) => response.data,
     }),
+
+    /**
+     * Retrieves the wishlist from the backend API.
+     */
+    getWishlist: builder.query({
+      query: () => '/v1/wishlist',
+      transformResponse: (response) => response.data,
+      providesTags: ['Wishlist'],
+    }),
+
+    /**
+     * Toggles a product in the wishlist.
+     */
+    toggleWishlist: builder.mutation({
+      query: (productId) => ({
+        url: '/v1/wishlist/toggle',
+        method: 'POST',
+        body: {
+          product_id: productId,
+        },
+      }),
+      transformResponse: (response) => response.data,
+      invalidatesTags: ['Wishlist'],
+    }),
   }),
 });
 
@@ -75,4 +99,6 @@ export const {
   useLazyGetProductsQuery,
   useGetCartQuery,
   useSyncCartMutation,
+  useGetWishlistQuery,
+  useToggleWishlistMutation,
 } = api;
