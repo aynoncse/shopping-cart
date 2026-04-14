@@ -91,6 +91,22 @@ export const api = createApi({
       transformResponse: (response) => response.data,
       invalidatesTags: ['Wishlist'],
     }),
+
+    /**
+     * Retrieves or creates a share link for the authenticated user's wishlist.
+     */
+    getWishlistShareLink: builder.query({
+      query: () => '/v1/wishlist/share',
+      transformResponse: (response) => response.data,
+    }),
+
+    /**
+     * Retrieves a public wishlist by share token.
+     */
+    getPublicWishlist: builder.query({
+      query: (token) => `/v1/wishlist/public/${token}`,
+      transformResponse: (response) => response.data,
+    }),
   }),
 });
 
@@ -101,4 +117,6 @@ export const {
   useSyncCartMutation,
   useGetWishlistQuery,
   useToggleWishlistMutation,
+  useLazyGetWishlistShareLinkQuery,
+  useGetPublicWishlistQuery,
 } = api;

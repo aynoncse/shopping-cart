@@ -15,7 +15,9 @@ const wishlistSlice = createSlice({
     },
     addItem: (state, action) => {
       const product = action.payload;
-      const exists = state.items.some((item) => item.product?.id === product.id);
+      const exists = state.items.some(
+        (item) => item.product?.id === product.id,
+      );
 
       if (!exists) {
         state.items.push({
@@ -27,7 +29,9 @@ const wishlistSlice = createSlice({
     },
     removeItem: (state, action) => {
       const productId = action.payload;
-      state.items = state.items.filter((item) => item.product?.id !== productId);
+      state.items = state.items.filter(
+        (item) => item.product?.id !== productId,
+      );
     },
     resetWishlist: (state) => {
       state.items = [];
@@ -41,6 +45,7 @@ export const selectIsWishlisted = (productId) => (state) =>
   state.wishlist.items.some((item) => item.product?.id === productId);
 export const selectWishlistCount = (state) => state.wishlist.items.length;
 
-export const { setWishlist, addItem, removeItem, resetWishlist } = wishlistSlice.actions;
+export const { setWishlist, addItem, removeItem, resetWishlist } =
+  wishlistSlice.actions;
 
 export default wishlistSlice.reducer;
