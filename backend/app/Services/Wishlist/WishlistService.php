@@ -57,4 +57,39 @@ class WishlistService
             'added' => $added,
         ];
     }
+
+    /**
+     * Get or create the authenticated user's wishlist share token.
+     *
+     * @param User $user
+     * @return string
+     */
+    public function getOrCreateShareToken(User $user): string
+    {
+        if ($user->wishlist_share_token) {
+            return $user->wishlist_share_token;
+        }
+
+        $user->wishlist_share_token = Str::uuid()->toString();
+        $user->save();
+
+        return $user->wishlist_share_token;
+    }
+
+    /**
+     * Get a wishlist by its share token.
+     *
+     * @param string $token
+     * @return \Illuminate\Database\Eloquent\Collection|null
+     */
+    public function getWishlistByShareToken(string $token)
+    {
+        $user = User::where('wishlist_share_token', $token)->first();
+
+        if (!$user) {
+            return null;
+        }
+
+        return $this->getUserWishlist($user);
+    }
 }

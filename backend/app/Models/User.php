@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'firebase_uid',
         'avatar',
+        'wishlist_share_token',
     ];
 
     /**

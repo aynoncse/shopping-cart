@@ -18,9 +18,7 @@ class WishlistController extends Controller
      *
      * @param WishlistService $wishlistService The service handling wishlist business logic.
      */
-    public function __construct(private readonly WishlistService $wishlistService)
-    {
-    }
+    public function __construct(private readonly WishlistService $wishlistService) {}
 
     /**
      * Retrieve the authenticated user's wishlist.
@@ -48,5 +46,38 @@ class WishlistController extends Controller
         );
 
         return $this->successResponse($result, 'Wishlist updated successfully.');
+    }
+
+    /**
+     * Generate or retrieve a share link for the authenticated user's wishlist.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function share()
+    {
+        $token = $this->wishlistService->getOrCreateShareToken(Auth::user());
+        $shareUrl = rtrim((string) config('app.frontend_url'), '/') . '/wishlist/' . $token;
+
+        return $this->successResponse(
+            ['share_url' => $shareUrl],
+            'Wishlist share link retrieved successfully.'
+        );
+    }
+
+    /**
+     * View a public wishlist by share token.
+     *
+     * @param string $token
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function publicView(string $token)
+    {
+        $wishlist = $this->wishlistService->getWishlistByShareToken($token);
+
+        if (!$wishlist) {
+            return $this->errorResponse('Wishlist not found.', [], 404);
+        }
+
+        return $this->successResponse($wishlist, 'Wishlist retrieved successfully.');
     }
 }
